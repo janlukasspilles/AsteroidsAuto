@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AsteroidsModel
 {
-    public class Field
+    public enum Operation
     {
-        private List<Asteroid> _asteroids;
-        private List<Shot> _shots;
-        
+        VCTR,
+        LABS,
+        HALT,
+        JSRL,
+        RTSL,
+        JMPL,
+        SVEC
     }
 }

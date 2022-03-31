@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsteroidsModel", "AsteroidsModel\AsteroidsModel.csproj", "{9C003C9A-A21C-44B5-BE83-1DB0ABD6CFAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsteroidsModel", "AsteroidsModel\AsteroidsModel.csproj", "{9C003C9A-A21C-44B5-BE83-1DB0ABD6CFAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsteroidsConsole", "AsteroidsConsole\AsteroidsConsole.csproj", "{80E76D7E-6945-4AC2-B511-608131E659A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsteroidsConsole", "AsteroidsConsole\AsteroidsConsole.csproj", "{80E76D7E-6945-4AC2-B511-608131E659A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsteroidsController", "AsteroidsController\AsteroidsController.csproj", "{EE0ED165-7817-4442-9929-AEEBB5BC9371}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetwork", "NeuralNetwork\NeuralNetwork.csproj", "{44A24D00-FE3C-4E0B-89C7-6F43184F90E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsteroidsController", "AsteroidsController\AsteroidsController.csproj", "{EE0ED165-7817-4442-9929-AEEBB5BC9371}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{EE0ED165-7817-4442-9929-AEEBB5BC9371}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE0ED165-7817-4442-9929-AEEBB5BC9371}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE0ED165-7817-4442-9929-AEEBB5BC9371}.Release|Any CPU.Build.0 = Release|Any CPU
-		{44A24D00-FE3C-4E0B-89C7-6F43184F90E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{44A24D00-FE3C-4E0B-89C7-6F43184F90E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{44A24D00-FE3C-4E0B-89C7-6F43184F90E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{44A24D00-FE3C-4E0B-89C7-6F43184F90E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -23,6 +23,12 @@ namespace AsteroidsModel
             Size = 14;
         }
 
+        public Ufo(int x, int y, int size)
+        {
+            Position = new Point(x, y);
+            Size = size;
+        }
+
         public int Size { get => _size; set => _size = value; }
     }
 }
