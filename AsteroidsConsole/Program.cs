@@ -1,6 +1,11 @@
-﻿using AsteroidsModel;
+﻿using AsteroidsControllers;
+using AsteroidsModel;
 using System;
+using System.IO;
+using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AsteroidsConsole
 {
@@ -8,13 +13,9 @@ namespace AsteroidsConsole
     {
         static void Main(string[] args)
         {
-            using (UdpClient client = new UdpClient("127.0.0.1", 1979))
-            {
-                byte[] bytes = client.ReceiveAsync().Result.Buffer;
-
-            }
+            AsteroidsController ac = new(1979, "127.0.0.1");
+            ac.Start();
         }
-
         static Operation GetBefehl(byte b1)
         {
             //Ersten 4 Bits holen. Dazu Shift nach rechts um 4, dadurch wird vorne mit 0 aufgefüllt.

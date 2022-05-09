@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsteroidsConsole", "Asteroi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsteroidsController", "AsteroidsController\AsteroidsController.csproj", "{EE0ED165-7817-4442-9929-AEEBB5BC9371}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsteroidsPlayerUI", "AsteroidsPlayerUI\AsteroidsPlayerUI.csproj", "{D89576BC-228B-4CA4-B6A2-D9770A9070E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{EE0ED165-7817-4442-9929-AEEBB5BC9371}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE0ED165-7817-4442-9929-AEEBB5BC9371}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE0ED165-7817-4442-9929-AEEBB5BC9371}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D89576BC-228B-4CA4-B6A2-D9770A9070E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D89576BC-228B-4CA4-B6A2-D9770A9070E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D89576BC-228B-4CA4-B6A2-D9770A9070E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D89576BC-228B-4CA4-B6A2-D9770A9070E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

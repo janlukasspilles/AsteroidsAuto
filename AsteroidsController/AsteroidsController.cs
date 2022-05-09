@@ -1,7 +1,10 @@
 ﻿using AsteroidsModel;
 using System;
 using System.Collections;
+using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 
 namespace AsteroidsControllers
 {
@@ -10,6 +13,7 @@ namespace AsteroidsControllers
         private int _port;
         private string _adresse;
         private readonly string _prefix = "ctmame";
+        private GameField gf;
         public AsteroidsController(int port, string adresse)
         {
             Port = port;
@@ -18,14 +22,16 @@ namespace AsteroidsControllers
 
         public int Port { get => _port; set => _port = value; }
         public string Adresse { get => _adresse; set => _adresse = value; }
+        public GameField Gf { get => gf; set => gf = value; }
 
-        public byte[] SendToServer(Befehl befehl)
+        public void SendToServer(Befehl befehl)
         {
             using (UdpClient client = new UdpClient(Adresse, Port))
             {
                 client.Send(GetCommand(befehl), 8);
+                Thread.Sleep(10);
                 client.Send(GetCommand(Befehl.Pause), 8);
-                return client.ReceiveAsync().Result.Buffer;
+                var b = client.ReceiveAsync().Result.Buffer;
             }
         }
 
@@ -33,7 +39,23 @@ namespace AsteroidsControllers
         {
             return new byte[] { (byte)'c', (byte)'t', (byte)'m', (byte)'a', (byte)'m', (byte)'e', (byte)befehl, (byte)'0' };
         }
-        private void LadeSpielfeld(byte[] information)
+        public void Start()
+        {
+            using (UdpClient Client = new(Adresse, Port))
+            {
+                Client.Send(GetCommand(Befehl.Pause), 8);
+                void recv(IAsyncResult res)
+                {
+                    IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 1979);
+                    byte[] received = Client.EndReceive(res, ref RemoteIpEndPoint);
+                    //Process codes
+                    Gf = LadeSpielfeld(received);
+                }
+                Client.BeginReceive(new AsyncCallback(recv), null);
+                
+            }
+        }
+        public GameField LadeSpielfeld(byte[] information)
         {
             int dx = 0, dy = 0, sf = 0, vx = 0, vy = 0, vz = 0, vs = 0;
             GameField gameField = new();
@@ -50,11 +72,11 @@ namespace AsteroidsControllers
                         dy = GetValueWithoutOperation(b1, b2);
                         if (GetBitOutOfBytes(5, b1, b2))
                             dy *= -1;
-                        dx = GetValueWithoutOperation()
+                        //dx = GetValueWithoutOperation();
                         break;
                     case Operation.LABS:
-                        byte b3 = information[i + 2];
-                        byte b4 = information[i + 3];
+                        b3 = information[i + 2];
+                        b4 = information[i + 3];
                         vy = GetValueWithoutOperation(b1, b2);
                         vx = GetValueWithoutOperation(b3, b4);
                         vs = GetOperationWithoutValue(b3, b4);
@@ -105,6 +127,7 @@ namespace AsteroidsControllers
                         break;
                 }
             }
+            return gameField;
         }
         private bool GetBitOutOfBytes(int pos, params byte[] b)
         {
@@ -113,7 +136,7 @@ namespace AsteroidsControllers
         private int GetOperationWithoutValue(byte b1, byte b2)
         {
             BitArray bits = new BitArray(new byte[] { b1, b2 });
-            
+
             bits.RightShift(12);
             int[] res = new int[1];
             bits.CopyTo(res, 0);
