@@ -1,6 +1,8 @@
-﻿using AsteroidsModel;
+﻿using AsteroidsControllers;
+using AsteroidsModel;
 using System;
 using System.Collections;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -14,6 +16,7 @@ namespace AsteroidsControllers
         private string _adresse;
         private readonly string _prefix = "ctmame";
         private GameField gf;
+        private string example = "01E20CA20CE2009000000FF6C8FABDF9006500C3006500C7B9F921A14301007000001AC9C1A24500007000001AC9A7A08A00007000000DC985A0A100007000000DC952C86CA36410007000002CCB2CCB2CCBDDCADDCA54A3A0E06DCA6DCA6DCA6CA3E001005000002CCB2CCB2ECB41CBDDCA6CA3001300500000FCA1FC11B0B07C11004000002CCB32CB004000402CCB2CCB2CCB2ECB32CBDDCA2CCB78CA2CCB2CCB5CA27C11004000002CCB3ACB004000402CCB2CCB2CCB2CCB63CBDDCA2CCB78CA2CCB2CCB3CA27C11004000002CCB41CB004000402CCB2CCB2CCB2CCB4FCBDDCA2CCB78CA2CCB2CCB1CA27C11004000002CCB48CB004000402CCB2CCB2CCB2CCB4FCBDDCA2CCB78CA2CCB2CCB52C86CA36410007000002CCB2CCB2CCB63CBDDCA6CA3E001005000002CCB2CCB2ECB41CBDDCA6CA30013005000002CCB2CCB2CCBDDCADDCAFCA1FC11B0B001F872F801F852C86CA36410007000002CCB2CCB2CCB63CBDDCA6CA3E001005000002CCB2CCB2ECB41CBDDCA6CA30013005000002CCB2CCB2CCBDDCADDCAFCA1FC11B0B0DDCA6CA30013005000002CCB2CCB2CCBDDCADDCAFCA1FC11B0B0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009730";
         public AsteroidsController(int port, string adresse)
         {
             Port = port;
@@ -41,50 +44,54 @@ namespace AsteroidsControllers
         }
         public void Start()
         {
-            using (UdpClient Client = new(Adresse, Port))
-            {
-                Client.Send(GetCommand(Befehl.Pause), 8);
-                void recv(IAsyncResult res)
-                {
-                    IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 1979);
-                    byte[] received = Client.EndReceive(res, ref RemoteIpEndPoint);
-                    //Process codes
-                    Gf = LadeSpielfeld(received);
-                }
-                Client.BeginReceive(new AsyncCallback(recv), null);
-                
-            }
-        }
+            //using (UdpClient Client = new(Adresse, Port))
+            //{
+            //    Client.Send(GetCommand(Befehl.Pause), 8);
+            //    void recv(IAsyncResult res)
+            //    {
+            //        IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 1979);
+            //        byte[] received = Client.EndReceive(res, ref RemoteIpEndPoint);
+            //        string hex = Convert.ToHexString(received);
+            //        //Process codes
+            //        Gf = LadeSpielfeld(received);
+            //    }
+            //    Client.BeginReceive(new AsyncCallback(recv), null);
+
+            //}
+            byte[] b = Enumerable.Range(0, example.Length)
+                .Where(x => x % 2 == 0)
+                .Select(x => Convert.ToByte(example.Substring(x, 2), 16))
+                .ToArray();
+
+            GameField gf = LadeSpielfeld(b);
+        }        
+        
         public GameField LadeSpielfeld(byte[] information)
         {
             int dx = 0, dy = 0, sf = 0, vx = 0, vy = 0, vz = 0, vs = 0;
+
             GameField gameField = new();
-            for (int i = 0; i + 1 < information.Length - 2; i += 2)
+            int i = 2;
+            while (i < information.Length)
             {
                 //Ein Wort = 16 Bit, daher 2 Bytes nehmen
-                byte b1 = information[i];
-                byte b2 = information[i + 1];
-                switch (GetOperation(b1))
+                BitArray word = new BitArray(new byte[] { information[i+1], information[i]}).Reverse();
+                int[] tmp = new int[1];
+                word.CopyTo(tmp, 0);
+                Console.WriteLine(tmp[0]);
+                switch (GetOperationWord(word))
                 {
                     case Operation.VCTR:
-                        byte b3 = information[i + 2];
-                        byte b4 = information[i + 3];
-                        dy = GetValueWithoutOperation(b1, b2);
-                        if (GetBitOutOfBytes(5, b1, b2))
-                            dy *= -1;
-                        //dx = GetValueWithoutOperation();
+                        i += 4;
                         break;
                     case Operation.LABS:
-                        b3 = information[i + 2];
-                        b4 = information[i + 3];
-                        vy = GetValueWithoutOperation(b1, b2);
-                        vx = GetValueWithoutOperation(b3, b4);
-                        vs = GetOperationWithoutValue(b3, b4);
+                        i += 4;
                         break;
                     case Operation.HALT:
+                        i += 2;
                         break;
                     case Operation.JSRL:
-                        switch (GetSubRoutine(b1, b2))
+                        switch (GetSubRoutineWord(word))
                         {
                             case Subroutine.Copyright:
                                 break;
@@ -118,46 +125,29 @@ namespace AsteroidsControllers
                             case Subroutine.Unknown:
                                 break;
                         }
+                        i += 2;
                         break;
                     case Operation.RTSL:
+                        i += 2;
                         break;
                     case Operation.JMPL:
                         break;
                     case Operation.SVEC:
+                        i += 2;
                         break;
                 }
             }
             return gameField;
         }
-        private bool GetBitOutOfBytes(int pos, params byte[] b)
+        private BitArray GetValueWithoutOperationWord(BitArray word)
         {
-            return new BitArray(b).Get(pos);
+            return word.And(new BitArray(new bool[] { false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true }));
         }
-        private int GetOperationWithoutValue(byte b1, byte b2)
+        private Subroutine GetSubRoutineWord(BitArray word)
         {
-            BitArray bits = new BitArray(new byte[] { b1, b2 });
-
-            bits.RightShift(12);
             int[] res = new int[1];
-            bits.CopyTo(res, 0);
-            return res[0];
-        }
-        private int GetValueWithoutOperation(byte b1, byte b2)
-        {
-            BitArray bits = new BitArray(new byte[] { b1, b2 });
-            //Die ersten 4 Bits müssen auf 0 gesetzt werden, da hier die auszuführende Operation stand.
-            //4x nach Links löscht die führenden 4 Bits
-            //4x nach Rechts schiebt den nun richtigen Wert an die richtige Position
-            //Alternativ ein AND mit 0000 1111 1111 1111 (ersten 4 Bits werden damit zu 0, die restlichen behalten ihren Wert, siehe player.cpp)
-            bits.LeftShift(4);
-            bits.RightShift(4);
-            int[] res = new int[1];
-            bits.CopyTo(res, 0);
-            return res[0];
-        }
-        private Subroutine GetSubRoutine(byte b1, byte b2)
-        {
-            switch (GetValueWithoutOperation(b1, b2))
+            GetValueWithoutOperationWord(word).CopyTo(res, 0);
+            switch (res[0])
             {
                 case 0x852:
                     return Subroutine.Copyright;
@@ -187,26 +177,27 @@ namespace AsteroidsControllers
                     return Subroutine.Unknown;
             }
         }
-        private Operation GetOperation(byte b1)
+        private Operation GetOperationWord(BitArray word)
         {
-            //Ersten 4 Bits holen. Dazu Shift nach rechts um 4, dadurch wird vorne mit 0 aufgefüllt.
-            int intVal = b1 >> 4;
-            if (intVal >= 0 && intVal <= 9)
+            int[] res = new int[1];
+            word.RightShift(12).CopyTo(res, 0);            
+
+            if (res[0] >= 0 && res[0] <= 9)
                 return Operation.VCTR;
-            else if (intVal == 10)
+            else if (res[0] == 10)
                 return Operation.LABS;
-            else if (intVal == 11)
+            else if (res[0] == 11)
                 return Operation.HALT;
-            else if (intVal == 12)
+            else if (res[0] == 12)
                 return Operation.JSRL;
-            else if (intVal == 13)
+            else if (res[0] == 13)
                 return Operation.RTSL;
-            else if (intVal == 14)
+            else if (res[0] == 14)
                 return Operation.JMPL;
-            else if (intVal == 15)
+            else if (res[0] == 15)
                 return Operation.SVEC;
             else
-                throw new ArgumentException($"Ungültige Operation {intVal:X}");
+                throw new ArgumentException($"Ungültige Operation {res[0]:X}");
         }
     }
 }
