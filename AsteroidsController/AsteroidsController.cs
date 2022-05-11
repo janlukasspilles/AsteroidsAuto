@@ -69,6 +69,11 @@ namespace AsteroidsControllers
         public GameField LadeSpielfeld(byte[] information)
         {
             int dx = 0, dy = 0, sf = 0, vx = 0, vy = 0, vz = 0, vs = 0;
+            int[] vector_ram = new int[512];
+            for(int j = 0; j < 512; j++)
+            {
+                vector_ram[j] = information[2 * j] | information[2 * j + 1] << 8;
+            }
 
             GameField gameField = new();
             int i = 2;
