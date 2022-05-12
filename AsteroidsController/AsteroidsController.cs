@@ -80,7 +80,7 @@ namespace AsteroidsControllers
             while (i < information.Length)
             {
                 //Ein Wort = 16 Bit, daher 2 Bytes nehmen
-                BitArray word = new BitArray(new byte[] { information[i+1], information[i]}).Reverse();
+                BitArray word = new BitArray(new byte[] { information[i], information[i + 1] });//.Reverse();
                 int[] tmp = new int[1];
                 word.CopyTo(tmp, 0);
                 Console.WriteLine(tmp[0]);

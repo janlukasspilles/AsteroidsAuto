@@ -9,7 +9,7 @@ namespace AsteroidsControllers
 {
     public static class BitArrayExtensions
     {
-        public static BitArray Reverse(this BitArray array)
+        public static BitArray ReverseByteweise(this BitArray array)
         {
             for (int i = 0; i < array.Length; i += 8)
             {
@@ -19,6 +19,17 @@ namespace AsteroidsControllers
                     array[i + j] = array[i + 8 - j - 1];
                     array[i + 8 - j - 1] = bit;
                 }
+            }
+            return array;
+        }
+
+        public static BitArray Reverse(this BitArray array)
+        {
+            for (int i = 0; i < array.Length/2; i++)
+            {
+                bool bit = array[i];
+                array[i] = array[array.Length - i - 1];
+                array[array.Length - i - 1] = bit;
             }
             return array;
         }
