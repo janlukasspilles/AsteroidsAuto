@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AsteroidsControllers;
+using System;
 using System.Collections;
 
 namespace AsteroidsModel.VektorInstruktionen
@@ -18,6 +19,10 @@ namespace AsteroidsModel.VektorInstruktionen
         public int Xs { get => _xs; set => _xs = value; }
         public int Ys { get => _ys; set => _ys = value; }
         public int Divisor { get => _divisor; set => _divisor = value; }
+        public VCTR(BitArray b1, BitArray b2)
+        {
+            Console.WriteLine("B1: " + b1.AsString());
+        }
 
         public VCTR(byte b1, byte b2, byte b3, byte b4, int globalerSkalierungsfaktor) : base(b1, b2)
         {

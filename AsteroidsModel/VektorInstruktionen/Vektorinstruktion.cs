@@ -12,6 +12,10 @@ namespace AsteroidsModel.VektorInstruktionen
         private int _opcode;
         public int Opcode { get => _opcode; set => _opcode = value; }
 
+        public Vektorinstruktion()
+        {
+
+        }
         public Vektorinstruktion(byte b1, byte b2)
         {
             SetOpcode(b1, b2);

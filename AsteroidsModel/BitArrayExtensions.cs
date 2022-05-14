@@ -33,5 +33,21 @@ namespace AsteroidsControllers
             }
             return array;
         }
+
+        public static string AsString(this BitArray array)
+        {
+            string res = "";
+            for (int i = 0; i < array.Length; i++)
+            {
+                res += array.Get(i) ? "1" : "0";
+            }
+            return res;
+        }
+
+        public static int GetIntValue(this BitArray array, int index, int length)
+        {
+            BitArray tmp = new BitArray(array);
+
+        }
     }
 }

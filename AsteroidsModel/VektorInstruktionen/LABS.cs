@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using AsteroidsControllers;
+using System;
+using System.Collections;
 
 namespace AsteroidsModel.VektorInstruktionen
 {
@@ -10,6 +12,14 @@ namespace AsteroidsModel.VektorInstruktionen
         public int X { get => _x; set => _x = value; }
         public int Y { get => _y; set => _y = value; }
         public int GlobalerSkalierungsFaktor { get => globalerSkalierungsFaktor; set => globalerSkalierungsFaktor = value; }
+
+        public LABS(BitArray b1, BitArray b2)
+        {
+            Console.WriteLine(b1.AsString());
+            int[] res = new int[1];
+            b1.CopyTo(res, 0);
+            var tmp = 0b1001;
+        }
 
         public LABS(byte b1, byte b2, byte b3, byte b4) : base(b1, b2)
         {
