@@ -21,6 +21,64 @@ namespace AsteroidsModel.VektorInstruktionen
         public int Sf0 { get => _sf0; set => _sf0 = value; }
         public int Sf1 { get => _sf1; set => _sf1 = value; }
         public int Divisor { get => _divisor; set => _divisor = value; }
+        public SVEC(BitArray word, int gsf)
+        {
+            BitArray tmp = new BitArray(word);
+            tmp.And(new BitArray(new bool[] { true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false }));
+            tmp.LeftShift(8);
+            int[] res = new int[1];
+            tmp.CopyTo(res, 0);
+            X = res[0];
+
+            tmp = new BitArray(word);
+            tmp.And(new BitArray(new bool[] { false, false, false, false, false, false, false, false, true, true, false, false, false, false, false, false }));            
+            res = new int[1];
+            tmp.CopyTo(res, 0);
+            Y = res[0];
+
+            Y = word.Get(10) ? Y * -1 : Y;
+            X = word.Get(2) ? X * -1 : X;
+
+            tmp = new BitArray(word);
+            tmp.And(new BitArray(new bool[] { false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false }));
+            tmp.RightShift(4);
+            res = new int[1];
+            tmp.CopyTo(res, 0);
+            Helligkeit = res[0];
+
+            int i = word.Get(11) ? 1 : 0;
+            switch (gsf + i)
+            {
+                case 0:
+                    Y = Y / 128;
+                    break;
+                case 1:
+                    Y = Y / 64;
+                    break;
+                case 2:
+                    Y = Y / 32;
+                    break;
+                case 3:
+                    Y = Y / 16;
+                    break;
+            }
+            i = word.Get(3) ? 1 : 0;
+            switch (gsf + i)
+            {
+                case 0:
+                    X = X / 128;
+                    break;
+                case 1:
+                    X = X / 64;
+                    break;
+                case 2:
+                    X = X / 32;
+                    break;
+                case 3:
+                    X = X / 16;
+                    break;
+            }
+        }
         public SVEC(byte b1, byte b2, int globalerSkalierungsfaktor) : base(b1, b2)
         {
             SetHelligkeit(b2);

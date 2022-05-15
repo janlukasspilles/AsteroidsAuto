@@ -14,7 +14,7 @@ namespace AsteroidsConsole
         static void Main(string[] args)
         {
             AsteroidsController ac = new(1979, "127.0.0.1");
-            ac.Start();
+            ac.StartBot();
         }
         static Operation GetBefehl(byte b1)
         {

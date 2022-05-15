@@ -13,6 +13,7 @@ namespace AsteroidsModel
         {
             Read(bild);
         }
+
         private void Read(byte[] bild)
         {
             Queue<Vektorinstruktion> q = new();
@@ -22,29 +23,36 @@ namespace AsteroidsModel
                 switch (GetOperation(bild[i]))
                 {
                     case Operation.VCTR:
-                        q.Enqueue(new VCTR(bild[i], bild[i + 1], bild[i + 2], bild[i + 3], gsf));
+                        //q.Enqueue(new VCTR(bild[i], bild[i + 1], bild[i + 2], bild[i + 3], gsf));
                         i += 2;
                         break;
+
                     case Operation.LABS:
                         var l = new LABS(bild[i], bild[i + 1], bild[i + 2], bild[i + 3]);
                         q.Enqueue(l);
                         i += 2;
                         gsf = l.GlobalerSkalierungsFaktor;
                         break;
+
                     case Operation.HALT:
                         break;
+
                     case Operation.JSRL:
                         break;
+
                     case Operation.RTSL:
                         break;
+
                     case Operation.JMPL:
                         break;
+
                     case Operation.SVEC:
                         q.Enqueue(new SVEC(bild[i], bild[i + 1], gsf));
                         break;
                 }
             }
         }
+
         private Operation GetOperation(byte b1)
         {
             //Ersten 4 Bits holen. Dazu Shift nach rechts um 4, dadurch wird vorne mit 0 aufgefüllt.

@@ -25,7 +25,7 @@ namespace AsteroidsControllers
 
         public static BitArray Reverse(this BitArray array)
         {
-            for (int i = 0; i < array.Length/2; i++)
+            for (int i = 0; i < array.Length / 2; i++)
             {
                 bool bit = array[i];
                 array[i] = array[array.Length - i - 1];
@@ -44,10 +44,10 @@ namespace AsteroidsControllers
             return res;
         }
 
-        public static int GetIntValue(this BitArray array, int index, int length)
-        {
-            BitArray tmp = new BitArray(array);
+        //public static int GetIntValue(this BitArray array, int index, int length)
+        //{
+        //    BitArray tmp = new BitArray(array);
 
-        }
+        //}
     }
 }
